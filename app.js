@@ -9,10 +9,16 @@ const UNCHECK = "fa-circle-thin";
 const LINE_THROUGH = "lineThrough";
 
 // Variables
-let LIST, id;
+let LIST = [];
+let id = 0;
+
+// get item from local storage
+
+//add item to localstorage
+localStorage.setItem
 
 // Show today's date
-const options = {weekday:"long", month:"short", day:"numeric"};
+const options = { weekday: "long", month: "short", day: "numeric" };
 const today = new Date();
 
 dateElement.innerHTML = today.toLocaleDateString("en-UK", options);
@@ -34,9 +40,8 @@ function addToDo(toDo, id, done, trash) {
 
   const position = "beforeend";
 
-  list.insertAdjacentElement(position. item);
+  list.insertAdjacentElement(position.item);
 }
-
 
 // Store a to-do
 document.addEventListener("keyup", function (event) {
@@ -44,14 +49,16 @@ document.addEventListener("keyup", function (event) {
     const toDo = input.value;
     if (toDo) {
       addToDo(toDo);
-    
-      LIST.push(
-          {
-              name : toDo,
-              id : id,
-          }
-      )
+
+      LIST.push({
+        name: toDo,
+        id: id,
+        done: false,
+        trash: false
+      });
+      id++
     }
+    input.value = "";
   }
 });
 
@@ -59,9 +66,24 @@ function completeToDo(element) {
   element.classList.toggle(CHECK);
   element.classList.toggle(UNCHECK);
   element.parentNode.querySelector(".text").classList.toggle(LINE_THROUGH);
-  LIST[element.id].done ? falese:true;
+  LIST[element.id].done = LIST[element.id].done? falese : true;
 }
 
-function reomoveToDo(element){
-    element.parentNode.parentNode
-}
+function reomoveToDo(element) {
+  element.parentNode.parentNode.removeChild(element.parentNode);
+
+  LIST[element.id].trash = true;
+} 
+
+// target the items created dynamically
+
+list.addEventListener("click",function(event){
+    const element = event.target;//return the clicked element inside list
+    const elementJob = element.attributes.job.value; // complete or delete
+
+    if (elementJob == "complete") {
+completeToDo(element);
+    }else if(elementJob == "delete"){
+        reomoveToDo(element);
+    }
+})
